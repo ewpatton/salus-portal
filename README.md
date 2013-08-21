@@ -2,7 +2,7 @@ Salus is a health data portal that integrates health data from a
 number of portable devices, usually collected by a mobile phone via
 Bluetooth, and uploaded to the web. The data are captured using a
 semantic framework and rendered using modules built using the
-[https://github.com/ewpatton/SemantEco](SemantEco framework).
+[SemantEco framework](https://github.com/ewpatton/SemantEco).
 
 This research is actively seeking to write innovative algorithms that
 can analyze health data and provide as comprehensive as possible
