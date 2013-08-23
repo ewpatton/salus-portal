@@ -7,6 +7,8 @@ import android.view.Menu;
 
 public class HelloAndroidActivity extends Activity {
 
+	private static final String TAG = HelloAndroidActivity.class.getSimpleName();
+
     /**
      * Called when the activity is first created.
      * @param savedInstanceState If the activity is being re-initialized after 
@@ -15,6 +17,7 @@ public class HelloAndroidActivity extends Activity {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }

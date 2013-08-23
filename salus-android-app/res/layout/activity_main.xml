@@ -44,10 +44,6 @@
                 android:maxWidth="48dp"
                 android:src="@drawable/face_0" />
 
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
-
             <ImageView
                 android:id="@+id/imageView2"
                 android:layout_width="0dp"
