@@ -13,12 +13,12 @@ import edu.rpi.tw.escience.semanteco.util.QueryVariableUtils;
  */
 public class HealthQueryVarUtils extends QueryVariableUtils {
 
-	public HealthQueryVarUtils(Query query) {
-		super(query);
-	}
+    public HealthQueryVarUtils(Query query) {
+        super(query);
+    }
 
-	public final Variable patientId() {
-		return getVariable("patientId");
-	}
+    public final Variable patientId() {
+        return getVariable("patientId");
+    }
 
 }
