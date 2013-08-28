@@ -1,22 +1,31 @@
 package edu.rpi.tw.mobilehealth;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.rdf.model.Model;
 
 import edu.rpi.tw.escience.semanteco.Domain;
 import edu.rpi.tw.escience.semanteco.Module;
 import edu.rpi.tw.escience.semanteco.ModuleConfiguration;
+import edu.rpi.tw.escience.semanteco.ProvidesDomain;
 import edu.rpi.tw.escience.semanteco.QueryMethod;
 import edu.rpi.tw.escience.semanteco.Request;
 import edu.rpi.tw.escience.semanteco.SemantEcoUI;
 import edu.rpi.tw.escience.semanteco.query.Query;
 import edu.rpi.tw.escience.semanteco.query.Query.Type;
 import edu.rpi.tw.escience.semanteco.query.QueryResource;
+import edu.rpi.tw.escience.semanteco.query.Variable;
 import edu.rpi.tw.mobilehealth.util.HealthQueryVarUtils;
 
-public class PatientModule implements Module {
+public class PatientModule implements Module, ProvidesDomain {
 
     private static final String RDFS_NS = "http://www.w3.org/2000/01/rdf-schema#";
+    private static final String HEALTH_NS = "http://mobilehealth.tw.rpi.edu/ontology/health.ttl#";
     private ModuleConfiguration config = null;
 
     @Override
@@ -67,17 +76,28 @@ public class PatientModule implements Module {
     }
 
     @QueryMethod
-    public String listPatientInformation(final Request request) {
+    public String listPatients(final Request request) {
         final Query query = config.getQueryFactory().newQuery(Type.SELECT);
         final HealthQueryVarUtils vars = new HealthQueryVarUtils(query);
         final QueryResource rdfsLabel = query.getResource(RDFS_NS + "label");
+        Set<Variable> variables = new LinkedHashSet<Variable>();
+        variables.add(vars.uri());
+        variables.add(vars.patientId());
         query.addPattern(vars.uri(), rdfsLabel, vars.patientId());
-        return null;
+        return config.getQueryExecutor(request).accept("application/json")
+                .execute(query);
     }
 
-    @QueryMethod
-    public String listPatientTests(final Request request) {
-        return null;
+    @Override
+    public List<Domain> getDomains(final Request request) {
+        List<Domain> domains = new ArrayList<Domain>();
+        Domain health = config.getDomain(URI.create(HEALTH_NS), true);
+        health.setLabel("Health");
+        health.addSource(URI.create("http://mobilehealth.tw.rpi.edu/source/amc-edu"), "Albany Medical");
+        health.addRegulation(URI.create("http://mobilehealth.tw.rpi.edu/ontology/ref-range-female.ttl#"), "Blood Ref. Range (Female)");
+        health.addDataType("bloodwork", "Bloodwork", config.getResource("128px-Blood_drop.svg.png"));
+        domains.add(health);
+        return domains;
     }
 
 }

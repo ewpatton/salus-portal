@@ -25,6 +25,7 @@
     <tomcat.version>7.0.29</tomcat.version>
     <tomcat.port>8080</tomcat.port>
     <tomcat.url>http://localhost:${tomcat.port}/manager/text</tomcat.url>
+    <triple-store>http://mobilehealth.tw.rpi.edu/sparql</triple-store>
     <!-- specify artifact for default module here -->
     <!-- you will also need to enable the use-default-module profile at the end of the pom -->
     <module.default>salus-patient-facet</module.default>
@@ -45,6 +46,41 @@
       <groupId>edu.rpi.tw.mobilehealth</groupId>
       <artifactId>salus-patient-facet</artifactId>
       <version>1.0-SNAPSHOT</version>
+      <classifier>module</classifier>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>edu.rpi.tw.mobilehealth</groupId>
+      <artifactId>salus-characteristic-facet</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <classifier>module</classifier>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>edu.rpi.tw.escience</groupId>
+      <artifactId>semanteco-domain</artifactId>
+      <version>4.2-SNAPSHOT</version>
+      <classifier>module</classifier>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>edu.rpi.tw.escience</groupId>
+      <artifactId>semanteco-data-source</artifactId>
+      <version>4.2-SNAPSHOT</version>
+      <classifier>module</classifier>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>edu.rpi.tw.escience</groupId>
+      <artifactId>semanteco-regulation</artifactId>
+      <version>4.2-SNAPSHOT</version>
+      <classifier>module</classifier>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>edu.rpi.tw.escience</groupId>
+      <artifactId>semanteco-data-type</artifactId>
+      <version>4.2-SNAPSHOT</version>
       <classifier>module</classifier>
       <scope>provided</scope>
     </dependency>
@@ -245,7 +281,7 @@
             <executions>
               <execution>
                 <id>unpack-default-module</id>
-                <phase>prepare-package</phase>
+                <phase>generate-resources</phase>
                 <goals>
                   <goal>unpack-dependencies</goal>
                 </goals>
@@ -264,7 +300,7 @@
             <executions>
               <execution>
                 <id>copy-default-module-assets</id>
-                <phase>prepare-package</phase>
+                <phase>process-resources</phase>
                 <goals>
                   <goal>copy-resources</goal>
                 </goals>
@@ -279,6 +315,14 @@
                 </configuration>
               </execution>
             </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>2.2</version>
+            <configuration>
+              <warSourceExcludes>index.jsp</warSourceExcludes>
+            </configuration>
           </plugin>
         </plugins>
       </build>

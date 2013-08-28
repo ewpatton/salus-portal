@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -47,9 +48,9 @@ public class QualitativeDataLogActivity extends Activity {
         saveBtn.setOnClickListener(new OnClickListener() {
 
             private final SimpleDateFormat sdf =
-                    new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+                    new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
             private final SimpleDateFormat xsdDateTimeFormat =
-                    new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                    new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
 
             public void onClick(View v) {
                 Date now = new Date();

@@ -40,9 +40,9 @@
   </scm>
 
   <modules>
+    <module>salus-utils</module>
     <module>facets</module>
     <module>salus-webapp</module>
-    <module>salus-android-app</module>
   </modules>
 
   <dependencyManagement>
@@ -74,4 +74,13 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+
+  <profiles>
+    <profile>
+      <id>with-android-app</id>
+      <modules>
+        <module>salus-android-app</module>
+      </modules>
+    </profile>
+  </profiles>
 </project>

@@ -193,7 +193,6 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@+id/TextView02"
                 android:layout_weight="1"
                 android:maxHeight="48dp"
                 android:maxWidth="48dp"
@@ -204,7 +203,6 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@+id/ImageView07"
                 android:layout_weight="1"
                 android:src="@drawable/face_2" />
 
@@ -213,7 +211,6 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@+id/ImageView08"
                 android:layout_weight="1"
                 android:src="@drawable/face_4" />
 
@@ -222,7 +219,6 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@+id/ImageView11"
                 android:layout_weight="1"
                 android:src="@drawable/face_6" />
 
@@ -231,7 +227,6 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@+id/ImageView12"
                 android:layout_weight="1"
                 android:src="@drawable/face_8" />
 
@@ -240,7 +235,6 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@+id/ImageView09"
                 android:layout_weight="1"
                 android:src="@drawable/face_10" />
 
@@ -251,7 +245,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/ImageView10"
             android:max="10" />
     </LinearLayout>
 

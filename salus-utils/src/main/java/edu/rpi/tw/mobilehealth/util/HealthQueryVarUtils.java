@@ -5,7 +5,7 @@ import edu.rpi.tw.escience.semanteco.query.Variable;
 import edu.rpi.tw.escience.semanteco.util.QueryVariableUtils;
 
 /**
- * Utilities for referncing commonly used variables in queries against the
+ * Utilities for referencing commonly used variables in queries against the
  * health ontology used by Salus.
  * 
  * @author ewpatton

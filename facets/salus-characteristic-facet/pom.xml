@@ -8,10 +8,10 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>salus-patient-facet</artifactId>
+  <artifactId>salus-characteristic-facet</artifactId>
 
   <packaging>jar</packaging>
-  <name>semanteco Patient facet</name>
+  <name>semanteco Characteristic facet</name>
 
   <repositories>
     <repository>
@@ -22,7 +22,6 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <triple-store>http://mobilehealth.tw.rpi.edu/sparql</triple-store>
   </properties>
 
   <dependencies>
@@ -41,6 +40,11 @@
     <dependency>
       <groupId>edu.rpi.tw.mobilehealth</groupId>
       <artifactId>salus-utils</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.googlecode.json-simple</groupId>
+      <artifactId>json-simple</artifactId>
+      <version>1.1.1</version>
     </dependency>
   </dependencies>
 
