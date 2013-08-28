@@ -270,7 +270,9 @@
       <id>use-default-module</id>
       <activation>
         <!-- switch this to true to activate default module on every build -->
-        <activeByDefault>true</activeByDefault>
+        <property>
+          <name>!ignoreDefaultModule</name>
+        </property>
       </activation>
       <build>
         <plugins>
