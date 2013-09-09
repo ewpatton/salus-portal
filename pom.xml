@@ -33,6 +33,15 @@
     </repository>
   </repositories>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>sonatype-snapshots</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases><enabled>false</enabled></releases>
+      <snapshots><enabled>true</enabled></snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+
   <scm>
     <connection>scm:git:https://github.com/ewpatton/Salus.git</connection>
     <developerConnection>scm:git:ssh://github.com/ewpatton/Salus.git</developerConnection>
@@ -69,11 +78,30 @@
       </dependency>
       <dependency>
         <groupId>edu.rpi.tw.escience</groupId>
-        <artifactId>semanteco-servlet-websocket</artifactId>
+        <artifactId>semanteco-servlet</artifactId>
         <version>4.2-SNAPSHOT</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.6.4-SNAPSHOT</version>
+        <executions>
+          <execution>
+            <id>prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <phase>initialize</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
   <profiles>
     <profile>

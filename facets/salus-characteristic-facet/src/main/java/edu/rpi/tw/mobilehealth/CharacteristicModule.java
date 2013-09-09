@@ -56,7 +56,7 @@ public class CharacteristicModule implements Module {
                 .get("bindings");
         for (int i = 0; i < bindings.size(); i++) {
             JSONObject binding = (JSONObject) bindings.get(i);
-            JSONObject var = (JSONObject) binding.get("characteristic");
+            JSONObject var = (JSONObject) binding.get("uri");
             String uri = (String) var.get("value");
             var = (JSONObject) binding.get("label");
             String label = (String) var.get("value");
@@ -127,12 +127,12 @@ public class CharacteristicModule implements Module {
         final QueryResource rdfsLabel = query.getResource(RDFS_NS + "label");
         final HealthQueryVarUtils vars = new HealthQueryVarUtils(query);
         Set<Variable> variables = new LinkedHashSet<Variable>();
-        variables.add(vars.characteristic());
+        variables.add(vars.uri());
         variables.add(vars.label());
         query.setVariables(variables);
-        query.addPattern(vars.characteristic(), rdfType,
+        query.addPattern(vars.uri(), rdfType,
                 healthBloodCharacteristic);
-        query.addPattern(vars.characteristic(), rdfsLabel, vars.label());
+        query.addPattern(vars.uri(), rdfsLabel, vars.label());
         return config.getQueryExecutor(request).accept("application/json")
                 .execute(query);
     }

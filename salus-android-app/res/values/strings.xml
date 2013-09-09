@@ -8,5 +8,14 @@
     <string name="save">Save</string>
     <string name="stress_level">Stress Level</string>
     <string name="happiness">Happiness</string>
+    <string name="y_axis">Thousands per Microliter</string>
+    <string name="title_activity_health_chart">Recent Health Data</string>
+    <string name="hello_world">Hello world!</string>
+
+    <!-- menu items -->
+    <string name="action_pick_characteristics">Pick Characteristics</string>
+    <string name="action_characteristics">Characteristics</string>
+    <string name="action_show_limits">Show Limits</string>
+    <string name="action_hide_limits">Hide Limits</string>
 
 </resources>

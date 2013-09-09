@@ -28,6 +28,12 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>edu.rpi.tw.escience</groupId>
+      <artifactId>semanteco-test</artifactId>
+      <version>4.2-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
