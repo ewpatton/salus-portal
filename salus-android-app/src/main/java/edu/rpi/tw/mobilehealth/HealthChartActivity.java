@@ -21,30 +21,39 @@ import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
 
 import edu.rpi.tw.mobilehealth.util.AppProperties;
+import edu.rpi.tw.mobilehealth.util.CACertManager;
 import edu.rpi.tw.mobilehealth.util.SemantEcoModuleCaller;
 import edu.rpi.tw.mobilehealth.util.SemantEcoModuleCaller.Callback;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Paint;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.SubMenu;
+import android.view.View;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
 import static edu.rpi.tw.mobilehealth.util.SemantEcoModuleCaller.specializedMapClass;
 
-public class HealthChartActivity extends Activity {
+public class HealthChartActivity extends Activity implements OnMenuItemClickListener {
 
     private static final String TAG = HealthChartActivity.class.getSimpleName();
     private XYPlot plot;
     private String serviceUrl = null;
+    private List<Map<String, Object>> characteristics = null;
 
     protected class CharacteristicCallback implements
         Callback<List<Map<String, Object>>> {
-        public void onSuccess(List<Map<String, Object>> results) {
+        public void onSuccess(final List<Map<String, Object>> results) {
             HealthChartActivity.this.runOnUiThread(new Runnable() {
                 public void run() {
+                    characteristics = results;
                     Toast.makeText(getApplicationContext(), "Success!",
                             Toast.LENGTH_LONG).show();
                 }
@@ -77,6 +86,8 @@ public class HealthChartActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chart);
+        CACertManager.installCertificate( getApplicationContext() );
+        registerForContextMenu(findViewById(R.id.mySimpleXYPlot));
 
         InputStream propFile = null;
         try {
@@ -181,4 +192,56 @@ public class HealthChartActivity extends Activity {
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    public boolean onMenuItemClick(MenuItem item) {
+        return false;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view,
+            ContextMenu.ContextMenuInfo info) {
+        if ( characteristics == null ) {
+            return;
+        }
+        menu.setHeaderTitle("Chart Options");
+        SubMenu submenu = menu.addSubMenu("Select X Axis");
+        MenuItem item = submenu.add(1, Menu.NONE, 0, "Time");
+        item.setCheckable( true );
+        item.setChecked( true );
+        Intent intent = new Intent();
+        intent.putExtra("uri", "http://www.w3.org/2001/XMLSchema#dateTime");
+        item.setIntent(intent);
+        int i = 1;
+        for(Map<String, Object> items : characteristics) {
+            item = submenu.add(1, Menu.NONE, i, (String)items.get("label"));
+            item.setCheckable( true );
+            item.setChecked( false );
+            intent = new Intent().putExtra("uri", items.get("uri").toString());
+            item.setIntent(intent);
+            i++;
+        }
+        submenu.setGroupCheckable(1, true, true);
+        submenu = menu.addSubMenu("Selecy Y Axis");
+        for(Map<String, Object> items : characteristics) {
+            item = submenu.add((String)items.get("label"));
+            item.setCheckable( true );
+            item.setChecked( item.getTitle().equals("White Blood Cells") || item.getTitle().equals("Neutrophil") );
+            intent = new Intent().putExtra("uri", items.get("uri").toString());
+            item.setIntent(intent);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        Intent intent = item.getIntent();
+        if ( intent == null ) {
+            return super.onContextItemSelected(item);
+        }
+        item.setChecked(!item.isChecked());
+        return true;
+    }
 }

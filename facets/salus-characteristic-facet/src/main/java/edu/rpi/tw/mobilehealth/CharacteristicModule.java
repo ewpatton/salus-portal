@@ -1,11 +1,13 @@
 package edu.rpi.tw.mobilehealth;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -16,6 +18,7 @@ import edu.rpi.tw.escience.semanteco.ModuleConfiguration;
 import edu.rpi.tw.escience.semanteco.QueryMethod;
 import edu.rpi.tw.escience.semanteco.Request;
 import edu.rpi.tw.escience.semanteco.SemantEcoUI;
+import edu.rpi.tw.escience.semanteco.query.GraphComponentCollection;
 import edu.rpi.tw.escience.semanteco.query.Query;
 import edu.rpi.tw.escience.semanteco.query.QueryResource;
 import edu.rpi.tw.escience.semanteco.query.Query.Type;
@@ -27,6 +30,7 @@ public class CharacteristicModule implements Module {
     private static final String RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
     private static final String RDFS_NS = "http://www.w3.org/2000/01/rdf-schema#";
     private static final String HEALTH_NS = "http://mobilehealth.tw.rpi.edu/ontology/health.ttl#";
+    private static final Logger LOG = Logger.getLogger(CharacteristicModule.class);
     private ModuleConfiguration config = null;
 
     @Override
@@ -44,29 +48,63 @@ public class CharacteristicModule implements Module {
     @Override
     public void visit(final Query query, final Request request) {
         // TODO modify queries
+        JSONArray characteristicUri = (JSONArray)request
+                .getParam("characteristic");
+        if ( characteristicUri == null ) {
+            return;
+        }
+        if ( characteristicUri.length() == 0 ) {
+            return;
+        }
+        final HealthQueryVarUtils vars = new HealthQueryVarUtils(query);
+        final QueryResource rdfType = query.getResource(RDF_NS + "type");
+        final QueryResource bloodMeasurement =
+                query.getResource(HEALTH_NS + "BloodMeasurement");
+        final QueryResource ofCharacteristic =
+                query.getResource(HEALTH_NS + "ofCharacteristic");
+        final List<GraphComponentCollection> graphs =
+                query.findGraphComponentsWithPattern(vars.measurement(),
+                        rdfType, bloodMeasurement);
+        if ( graphs.isEmpty() ) {
+            return;
+        }
+        for(GraphComponentCollection coll : graphs) {
+            for(int i=0; i<characteristicUri.length(); i++) {
+                final QueryResource characteristic =
+                        query.getResource(characteristicUri.optString(i));
+                coll.addPattern(vars.measurement(), ofCharacteristic,
+                        characteristic);
+            }
+        }
     }
 
     @Override
     public void visit(final SemantEcoUI ui, final Request request) {
         StringBuffer result = new StringBuffer(
-                "<select name=\"characteristic\">");
-        JSONObject object = (JSONObject) JSONValue
-                .parse(listCharacteristics(request));
-        JSONArray bindings = (JSONArray) ((JSONObject) object.get("results"))
-                .get("bindings");
-        for (int i = 0; i < bindings.size(); i++) {
-            JSONObject binding = (JSONObject) bindings.get(i);
-            JSONObject var = (JSONObject) binding.get("uri");
-            String uri = (String) var.get("value");
-            var = (JSONObject) binding.get("label");
-            String label = (String) var.get("value");
+                "<div class=\"facet\"><select name=\"characteristic\">");
+        JSONObject object = null;
+        try {
+            object = new JSONObject(listCharacteristics(request));
+        } catch (JSONException e) {
+            LOG.error("Unable to generate UI for the characteristic module.",
+                    e);
+            return;
+        }
+        JSONArray bindings = object.optJSONObject("results")
+                .optJSONArray("bindings");
+        for (int i = 0; i < bindings.length(); i++) {
+            JSONObject binding = bindings.optJSONObject(i);
+            JSONObject var = binding.optJSONObject("uri");
+            String uri = var.optString("value");
+            var = binding.optJSONObject("label");
+            String label = var.optString("value");
             result.append("<option value=\"");
             result.append(uri);
             result.append("\">");
             result.append(label);
             result.append("</option>");
         }
-        result.append("</select>");
+        result.append("</select></div>");
         ui.addFacet(config.generateStringResource(result.toString()));
     }
 

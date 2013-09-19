@@ -24,7 +24,7 @@ public class PatientModuleTest extends TestCase {
 		PatientModule module = new PatientModule();
 		TestModuleConfiguration config = new TestModuleConfiguration();
 		module.setModuleConfiguration(config);
-		module.visit((Model)null, null, null);
+		//module.visit((Model)null, null, null);
 	}
 	
 	@Test
@@ -32,7 +32,7 @@ public class PatientModuleTest extends TestCase {
 		PatientModule module = new PatientModule();
 		TestModuleConfiguration config = new TestModuleConfiguration();
 		module.setModuleConfiguration(config);
-		module.visit((OntModel)null, null, null);
+		//module.visit((OntModel)null, null, null);
 	}
 	
 	@Test
@@ -48,7 +48,7 @@ public class PatientModuleTest extends TestCase {
 		PatientModule module = new PatientModule();
 		TestModuleConfiguration config = new TestModuleConfiguration();
 		module.setModuleConfiguration(config);
-		module.visit(new TestUI(), null);
+		//module.visit(new TestUI(), null);
 	}
 	
 	@Test

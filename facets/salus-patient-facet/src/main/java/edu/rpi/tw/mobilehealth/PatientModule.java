@@ -20,24 +20,28 @@ import edu.rpi.tw.escience.semanteco.query.Query;
 import edu.rpi.tw.escience.semanteco.query.Query.Type;
 import edu.rpi.tw.escience.semanteco.query.QueryResource;
 import edu.rpi.tw.escience.semanteco.query.Variable;
+import edu.rpi.tw.mobilehealth.model.DataModelBuilder;
+import edu.rpi.tw.mobilehealth.model.Patient;
 import edu.rpi.tw.mobilehealth.util.HealthQueryVarUtils;
+import static edu.rpi.tw.escience.semanteco.util.QueryResourceUtils.RDFS_NS;
+import static edu.rpi.tw.mobilehealth.util.HealthQueryResourceUtils.HEALTH_NS;
 
 public class PatientModule implements Module, ProvidesDomain {
 
-    private static final String RDFS_NS = "http://www.w3.org/2000/01/rdf-schema#";
-    private static final String HEALTH_NS = "http://mobilehealth.tw.rpi.edu/ontology/health.ttl#";
     private ModuleConfiguration config = null;
 
     @Override
     public void visit(final Model model, final Request request,
             final Domain domain) {
         // TODO populate data model
+        request.getParam("patient");
     }
 
     @Override
     public void visit(final OntModel model, final Request request,
             final Domain domain) {
         // TODO populate ontology model
+        model.read("http://mobilehealth.tw.rpi.edu/ontology/health.ttl");
     }
 
     @Override
@@ -48,6 +52,19 @@ public class PatientModule implements Module, ProvidesDomain {
     @Override
     public void visit(final SemantEcoUI ui, final Request request) {
         // TODO add resources to display
+        DataModelBuilder builder = new DataModelBuilder(config, request);
+        List<Patient> patients = builder.getPatients();
+        StringBuilder sb = new StringBuilder("<div class=\"facet\">" +
+                "<select name=\"patient\">");
+        for(Patient patient : patients) {
+            sb.append("<option value=\"");
+            sb.append(patient.getUri());
+            sb.append("\">");
+            sb.append(patient.getId());
+            sb.append("</option>");
+        }
+        sb.append("</select></div>");
+        ui.addFacet(config.generateStringResource(sb.toString()));
     }
 
     @Override
@@ -84,6 +101,13 @@ public class PatientModule implements Module, ProvidesDomain {
         variables.add(vars.uri());
         variables.add(vars.patientId());
         query.addPattern(vars.uri(), rdfsLabel, vars.patientId());
+        return config.getQueryExecutor(request).accept("application/json")
+                .execute(query);
+    }
+
+    @QueryMethod
+    public String getPatientMeasurements(final Request request) {
+        final Query query = config.getQueryFactory().newQuery(Type.SELECT);
         return config.getQueryExecutor(request).accept("application/json")
                 .execute(query);
     }

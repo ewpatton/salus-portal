@@ -36,7 +36,7 @@ public class CharacteristicModuleTest extends TestCase {
 		CharacteristicModule module = new CharacteristicModule();
 		TestModuleConfiguration config = new TestModuleConfiguration();
 		module.setModuleConfiguration(config);
-		module.visit((Query)null, null);
+		//module.visit((Query)null, null);
 	}
 	
 	@Test

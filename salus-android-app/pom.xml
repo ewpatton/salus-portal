@@ -27,6 +27,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <platform.version>4.2</platform.version>
     <android.plugin.version>3.6.0</android.plugin.version>
+    <service.url>https://mobilehealth.tw.rpi.edu/Salus/</service.url>
   </properties>
 
   <dependencies>

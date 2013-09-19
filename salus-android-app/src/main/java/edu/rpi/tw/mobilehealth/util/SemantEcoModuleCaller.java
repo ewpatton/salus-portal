@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,6 +82,12 @@ public class SemantEcoModuleCaller {
                 final int SIZE = 4096;
                 URL url = new URL( targetUrl );
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                if ( conn instanceof HttpsURLConnection ) {
+                    SSLContext context = CACertManager.getContext();
+                    if ( context != null ) {
+                        ((HttpsURLConnection) conn).setSSLSocketFactory( context.getSocketFactory() );
+                    }
+                }
                 conn.setRequestMethod( "GET" );
                 conn.setDoInput( true );
                 conn.setRequestProperty("Accept", "application/sparql-results+json, application/json, text/plain");
@@ -104,6 +113,7 @@ public class SemantEcoModuleCaller {
                     } else if ( content.charAt( 0 ) == '[' ) {
                         JSONArray arr = new JSONArray( content );
                         //SPARQLResultsProcessor.process( arr, callback, clazz );
+                        POJOProcessor.process( arr, callback, clazz );
                     } else if ( content.charAt( 0 ) == '\"' ) {
                         
                     }
