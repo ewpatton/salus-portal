@@ -1,2 +1,6 @@
 salus-android-app/bin
 salus-android-app/gen
+.project
+.classpath
+.settings/
+target

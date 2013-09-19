@@ -8,6 +8,8 @@
         android:minSdkVersion="11"
         android:targetSdkVersion="16" />
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
 
     <application
         android:allowBackup="true"
@@ -24,6 +26,13 @@
         <activity
             android:name="edu.rpi.tw.mobilehealth.HealthChartActivity"
             android:label="@string/title_activity_health_chart" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="CalendarActivity" android:label="Calendar" android:icon="@drawable/icon">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
