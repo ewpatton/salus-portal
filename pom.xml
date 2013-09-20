@@ -50,6 +50,7 @@
 
   <modules>
     <module>salus-utils</module>
+    <module>calendar-api</module>
     <module>facets</module>
     <module>salus-webapp</module>
   </modules>
@@ -107,6 +108,7 @@
     <profile>
       <id>with-android-app</id>
       <modules>
+        <module>android-calendar</module>
         <module>salus-android-app</module>
       </modules>
     </profile>
