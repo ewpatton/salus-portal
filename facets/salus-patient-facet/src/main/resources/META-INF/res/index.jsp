@@ -9,6 +9,17 @@
     <module:styles />
     <core:scripts />
     <module:scripts />
+	<style>
+		.draggable li {
+		}
+	</style>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<script>
+		$(function() {
+			$( ".draggable" ).draggable({ opacity: 0.7, helper: "clone" });
+		});
+	</script>
   </head>
   <body onload="SemantEco.initialize()">
         <div id="header">
@@ -34,7 +45,7 @@
           <div id="sparql2"><div></div></div>
           <div id="sparql"><div id="sparql-content"></div><div class="big"><a onclick="javascript:hideSparql();">Close this window</a></div></div>
         </div>
-
+		
         <div class="lightbox" style="display:none;">
             <div class="lb_shadow">
                 <div class="positioner">

@@ -9,6 +9,7 @@
     <module:styles />
     <core:scripts />
     <module:scripts />
+	<script type="text/javascript" src="js/vis.js"></script>
   </head>
   <body onload="SemantEco.initialize()">
     <div id="header">

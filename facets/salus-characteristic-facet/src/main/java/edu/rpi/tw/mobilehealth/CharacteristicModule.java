@@ -81,7 +81,7 @@ public class CharacteristicModule implements Module {
     @Override
     public void visit(final SemantEcoUI ui, final Request request) {
         StringBuffer result = new StringBuffer(
-                "<div class=\"facet\"><select name=\"characteristic\">");
+                "<div class=\"facet\" style=\"width: inherit; height: 200px; overflow: auto;\"><ul name=\"characteristic\">");
         JSONObject object = null;
         try {
             object = new JSONObject(listCharacteristics(request));
@@ -92,19 +92,21 @@ public class CharacteristicModule implements Module {
         }
         JSONArray bindings = object.optJSONObject("results")
                 .optJSONArray("bindings");
+		// Katie TODO: - make these into a UL
+		// 			   - that is also draggable
         for (int i = 0; i < bindings.length(); i++) {
             JSONObject binding = bindings.optJSONObject(i);
             JSONObject var = binding.optJSONObject("uri");
             String uri = var.optString("value");
             var = binding.optJSONObject("label");
             String label = var.optString("value");
-            result.append("<option value=\"");
+            result.append("<li class=\"draggable\" href=\"");
             result.append(uri);
             result.append("\">");
             result.append(label);
-            result.append("</option>");
+            result.append("</li>");
         }
-        result.append("</select></div>");
+        result.append("</ul></div>");
         ui.addFacet(config.generateStringResource(result.toString()));
     }
 
