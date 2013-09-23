@@ -21,4 +21,8 @@ public class HealthQueryVarUtils extends QueryVariableUtils {
         return getVariable("patientId");
     }
 
+    public final Variable sample() {
+        return getVariable("sample");
+    }
+
 }

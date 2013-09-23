@@ -12,7 +12,27 @@ public class HealthQueryResourceUtils extends QueryResourceUtils {
         super(query);
     }
 
-    public QueryResource healthPatient() {
+    public final QueryResource healthPatient() {
         return getResource(HEALTH_NS, "Patient");
+    }
+
+    public final QueryResource healthHasSample() {
+        return getResource(HEALTH_NS, "hasSample");
+    }
+
+    public final QueryResource healthHasMeasurement() {
+        return getResource(HEALTH_NS, "hasMeasurement");
+    }
+
+    public final QueryResource healthHasValue() {
+        return getResource(HEALTH_NS, "hasValue");
+    }
+
+    public final QueryResource healthOfCharacteristic() {
+        return getResource(HEALTH_NS, "ofCharacteristic");
+    }
+
+    public final QueryResource healthHasUnit() {
+        return getResource(HEALTH_NS, "hasUnit");
     }
 }
