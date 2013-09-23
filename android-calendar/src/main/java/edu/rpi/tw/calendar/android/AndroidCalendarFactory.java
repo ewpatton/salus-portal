@@ -36,41 +36,50 @@ public class AndroidCalendarFactory implements CalendarFactory {
         return s.replaceAll(":", "\\:");
     }
 
+    protected void initialize() {
+        final Uri uri = Calendars.CONTENT_URI;
+        final ContentResolver cr = context.get().getContentResolver();
+        Cursor cur = null;
+        try {
+            cur = cr.query(uri, PROJECTION, null, null, null);
+            calendars = new HashMap<String, Calendar>();
+            while( cur.moveToNext() ) {
+                Calendar c = new AndroidCalendar( cr, cur.getLong( 0 ),
+                        cur.getString( 1 ), cur.getString( 4 ) );
+                String name = "urn:ical:" + esc( cur.getString( 1 ) ) +
+                        ":" + esc( cur.getString( 2 ) ) + ":" +
+                        esc( cur.getString( 3 ) );
+                calendars.put( name, c );
+            }
+        } finally {
+            if ( cur != null ) {
+                cur.close();
+            }
+        }
+    }
+
     @Override
     public Collection<String> getCalendarNames() {
         if ( calendars == null ) {
-            Uri uri = Calendars.CONTENT_URI;
-            ContentResolver cr = context.get().getContentResolver();
-            Cursor cur = null;
-            try {
-                cur = cr.query(uri, PROJECTION, null, null, null);
-                calendars = new HashMap<String, Calendar>();
-                while( cur.moveToNext() ) {
-                    Calendar c = new AndroidCalendar( cur.getLong( 0 ),
-                            cur.getString( 1 ), cur.getString( 4 ) );
-                    String name = "ical:" + esc( cur.getString( 1 ) ) + ":" +
-                            esc( cur.getString( 2 ) ) + ":" +
-                            esc( cur.getString( 3 ) );
-                }
-            } finally {
-                if ( cur != null ) {
-                    cur.close();
-                }
-            }
+            initialize();
         }
         return calendars == null ? null : calendars.keySet();
     }
 
     @Override
     public Calendar getCalendar( String name ) {
-        // TODO Auto-generated method stub
-        return null;
+        if ( calendars == null ) {
+            initialize();
+        }
+        return calendars.get( name );
     }
 
     @Override
     public Collection<Calendar> getAllCalendars() {
-        // TODO Auto-generated method stub
-        return null;
+        if ( calendars == null ) {
+            initialize();
+        }
+        return calendars == null ? null : calendars.values();
     }
 
 }

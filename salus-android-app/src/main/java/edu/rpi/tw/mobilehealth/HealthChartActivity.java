@@ -20,6 +20,11 @@ import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
 
+import edu.rpi.tw.calendar.Calendar;
+import edu.rpi.tw.calendar.CalendarFactory;
+import edu.rpi.tw.calendar.Event;
+import edu.rpi.tw.calendar.Instance;
+import edu.rpi.tw.calendar.android.AndroidCalendarFactory;
 import edu.rpi.tw.mobilehealth.util.AppProperties;
 import edu.rpi.tw.mobilehealth.util.CACertManager;
 import edu.rpi.tw.mobilehealth.util.SemantEcoModuleCaller;
@@ -183,6 +188,36 @@ public class HealthChartActivity extends Activity implements OnMenuItemClickList
         labelPaint.setTextSize(dipToPixels(12));
         labelPaint = plot.getGraphWidget().getRangeLabelPaint();
         labelPaint.setTextSize(dipToPixels(12));
+        try {
+            testCalendar();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public final void testCalendar() {
+        CalendarFactory calendars = new AndroidCalendarFactory( getApplicationContext() );
+        for( Calendar calendar : calendars.getAllCalendars() ) {
+            System.out.println( "Calendar: " + calendar.toString() );
+            System.out.println( "  Display Name: " + calendar.getDisplayName());
+            for ( Event event : calendar.getUpcomingEvents() ) {
+                System.out.println( "  Event: " + event.getTitle() );
+                System.out.println( "    Organizer: " + event.getOrganizer() );
+                System.out.println( "    Location: " + event.getLocation() );
+                System.out.println( "    Availability: " + event.getAvailability());
+                System.out.println( "    Start: " + event.getStart() );
+                System.out.println( "    End: " + event.getEnd() );
+                System.out.println( "    Duration: " + event.getDuration() );
+                System.out.println( "    RRule: " + event.getRRule() );
+                System.out.println( "    RDate: " + event.getRDate() );
+                for ( Instance i : event ) {
+                    System.out.println( "    Instance:");
+                    System.out.println( "      Start: " + i.getStart());
+                    System.out.println( "      End: " + i.getEnd());
+                }
+            }
+            System.out.println();
+        }
     }
 
     @Override

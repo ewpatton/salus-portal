@@ -33,10 +33,14 @@ public class DataModelBuilder {
 
     public List<Patient> getPatients(final Model model) {
         List<Patient> patients = new ArrayList<Patient>();
-        final Query query = config.getQueryFactory().newQuery(Type.DESCRIBE);
+
+        // switch to describe once the data are compatible with Jena
+        final Query query = config.getQueryFactory().newQuery(Type.CONSTRUCT);
         final HealthQueryVarUtils vars = new HealthQueryVarUtils(query);
         final HealthQueryResourceUtils res = new HealthQueryResourceUtils(query);
         query.addPattern(vars.uri(), res.rdfType(), res.healthPatient());
+        query.addPattern(vars.uri(), res.rdfsLabel(), vars.label());
+        query.addPattern(vars.uri(), res.dcIdentifier(), vars.id());
         config.getQueryExecutor(request).accept("text/turtle").execute(query, model);
         ResIterator i = 
                 model.listSubjectsWithProperty(model.getProperty(RDF_NS+"type"),
