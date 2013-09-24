@@ -17,8 +17,17 @@
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 	<script>
 		$(function() {
-			$( ".draggable" ).draggable({ opacity: 0.7, helper: "clone" });
-		});
+			var theText, theURI;
+			$( ".draggable" ).draggable({ 
+				opacity: 0.7,  
+				start: function (event, ui) {
+					theText = $(this).text();
+					theURI = $(this).attr('href');
+				},
+				helper: function( event, ui ) {
+				return $( "<a href=\"" + theURI + "\">"+ theText + "</a>" );
+			} });// /draggable
+		});// /function
 	</script>
   </head>
   <body onload="SemantEco.initialize()">
