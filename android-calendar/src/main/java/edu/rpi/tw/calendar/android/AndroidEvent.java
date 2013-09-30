@@ -150,6 +150,11 @@ class AndroidEvent implements Event {
     }
 
     @Override
+    public long getId() {
+        return this._id;
+    }
+
+    @Override
     public Calendar getCalendar() {
         return owner.get();
     }
