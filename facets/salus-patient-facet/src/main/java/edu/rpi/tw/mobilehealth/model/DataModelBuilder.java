@@ -9,6 +9,7 @@ import com.hp.hpl.jena.rdf.model.ResIterator;
 
 import edu.rpi.tw.escience.semanteco.ModuleConfiguration;
 import edu.rpi.tw.escience.semanteco.Request;
+import edu.rpi.tw.escience.semanteco.query.GraphComponentCollection;
 import edu.rpi.tw.escience.semanteco.query.Query;
 import edu.rpi.tw.escience.semanteco.query.Query.Type;
 import edu.rpi.tw.escience.semanteco.query.QueryResource;
@@ -56,11 +57,27 @@ public class DataModelBuilder {
         final HealthQueryVarUtils vars = new HealthQueryVarUtils(query);
         final HealthQueryResourceUtils res = new HealthQueryResourceUtils(query);
         final QueryResource patient = query.getResource(patientUri);
+        final QueryResource instancePlist =
+                query.createPropertyPath("rdf:type/rdfs:subClassOf*");
+        GraphComponentCollection construct = query.getConstructComponent();
+        construct.addPattern(patient, res.rdfType(), res.healthPatient());
+        construct.addPattern(patient, res.healthHasSample(), vars.sample());
+        construct.addPattern(vars.sample(), res.healthHasMeasurement(), vars.measurement());
+        construct.addPattern(vars.measurement(), res.healthHasValue(), vars.value());
+        construct.addPattern(vars.measurement(), res.healthOfCharacteristic(), vars.characteristic());
+        construct.addPattern(vars.characteristic(), res.rdfType(), res.healthCharacteristic());
+        construct.addPattern(vars.measurement(), res.healthHasUnit(), vars.unit());
+        construct.addPattern(vars.measurement(), res.dcDate(), vars.date());
+
         query.addPattern(patient, res.healthHasSample(), vars.sample());
         query.addPattern(vars.sample(), res.healthHasMeasurement(), vars.measurement());
         query.addPattern(vars.measurement(), res.healthHasValue(), vars.value());
         query.addPattern(vars.measurement(), res.healthOfCharacteristic(), vars.characteristic());
+        query.addPattern(vars.characteristic(), instancePlist, res.healthCharacteristic());
         query.addPattern(vars.measurement(), res.healthHasUnit(), vars.unit());
+        query.addPattern(vars.unit(), res.rdfType(), res.oboeUnit());
         query.addPattern(vars.measurement(), res.dcDate(), vars.date());
+        config.getQueryExecutor( request ).accept( "text/turtle" )
+            .execute( query , model );
     }
 }

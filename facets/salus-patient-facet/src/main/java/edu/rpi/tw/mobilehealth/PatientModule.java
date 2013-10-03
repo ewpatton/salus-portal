@@ -6,6 +6,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.json.JSONArray;
+
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.rdf.model.Model;
 
@@ -22,6 +24,7 @@ import edu.rpi.tw.escience.semanteco.query.QueryResource;
 import edu.rpi.tw.escience.semanteco.query.Variable;
 import edu.rpi.tw.mobilehealth.model.DataModelBuilder;
 import edu.rpi.tw.mobilehealth.model.Patient;
+import edu.rpi.tw.mobilehealth.util.HealthQueryResourceUtils;
 import edu.rpi.tw.mobilehealth.util.HealthQueryVarUtils;
 import static edu.rpi.tw.escience.semanteco.util.QueryResourceUtils.RDFS_NS;
 import static edu.rpi.tw.mobilehealth.util.HealthQueryResourceUtils.HEALTH_NS;
@@ -34,14 +37,23 @@ public class PatientModule implements Module, ProvidesDomain {
     public void visit(final Model model, final Request request,
             final Domain domain) {
         // TODO populate data model
-        request.getParam("patient");
+        Object patient = request.getParam("patient");
+        DataModelBuilder builder = new DataModelBuilder( config, request );
+        if ( patient instanceof JSONArray ) {
+            JSONArray arr = (JSONArray) patient;
+            for ( int i = 0; i < arr.length(); i++ ) {
+                builder.loadPatientData(arr.optString(i), model);
+            }
+        } else if ( patient instanceof String ) {
+            builder.loadPatientData((String) patient, model);
+        }
     }
 
     @Override
     public void visit(final OntModel model, final Request request,
             final Domain domain) {
         // TODO populate ontology model
-        model.read("http://mobilehealth.tw.rpi.edu/ontology/health.ttl");
+        model.read("http://mobilehealth.tw.rpi.edu/ontology/health.ttl", "TTL");
     }
 
     @Override
@@ -108,8 +120,19 @@ public class PatientModule implements Module, ProvidesDomain {
     @QueryMethod
     public String getPatientMeasurements(final Request request) {
         final Query query = config.getQueryFactory().newQuery(Type.SELECT);
+        final HealthQueryVarUtils vars = new HealthQueryVarUtils(query);
+        final HealthQueryResourceUtils res = new HealthQueryResourceUtils(query);
+        query.setDistinct(true);
+        query.addPattern(vars.uri(), res.rdfType(), res.healthPatient());
+        query.addPattern(vars.uri(), res.healthHasSample(), vars.sample());
+        query.addPattern(vars.sample(), res.healthHasMeasurement(), vars.measurement());
+        query.addPattern(vars.measurement(), res.healthOfCharacteristic(), vars.characteristic());
+        query.addPattern(vars.measurement(), res.healthHasValue(), vars.value());
+        query.addPattern(vars.measurement(), res.healthHasUnit(), vars.unit());
+        query.addPattern(vars.measurement(), res.dcDate(), vars.date());
+        query.addPattern(vars.characteristic(), res.rdfsLabel(), vars.label());
         return config.getQueryExecutor(request).accept("application/json")
-                .execute(query);
+                .executeLocalQuery(query);
     }
 
     @Override

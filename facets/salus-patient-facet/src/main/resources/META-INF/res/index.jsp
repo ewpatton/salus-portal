@@ -7,14 +7,12 @@
     <title>Salus MobileHealth Portal</title>
     <core:styles />
     <module:styles />
-    <core:scripts />
-    <module:scripts />
 	<style>
 		.draggable li {
 		}
 	</style>
-	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <core:scripts />
+    <module:scripts />
 	<script>
 		$(function() {
 			var theText, theURI;
