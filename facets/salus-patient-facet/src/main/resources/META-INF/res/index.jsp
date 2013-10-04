@@ -8,24 +8,66 @@
     <core:styles />
     <module:styles />
 	<style>
-		.draggable li {
+		.droppable{
+			border-style:solid;
+			border-width:1px;
+			border-color:black;
+		}
+		.droppable-active{
+			border-style:solid;
+			border-width:1px;
+			border-color:#888;
+		}
+		.graph-legend{
+		}
+		.axis path, .axis line {
+			fill: none;
+			stroke: #000;
+			shape-rendering: crispEdges;
+		}
+		.x.axis path {
+			display: none;
+		}
+		.line {
+			fill: none;
+			<!--stroke: steelblue;	//we'll be using a bunch of different colors for lines. -->
+			stroke-width: 1.5px;
 		}
 	</style>
     <core:scripts />
     <module:scripts />
 	<script>
+		// Will hold the list of characteristics 
+		var activeGraph = [];
+		
+		var lineColor = d3.scale.category10();
+		
 		$(function() {
 			var theText, theURI;
 			$( ".draggable" ).draggable({ 
 				opacity: 0.7,  
+				revert: "invalid",
 				start: function (event, ui) {
 					theText = $(this).text();
 					theURI = $(this).attr('href');
 				},
-				helper: function( event, ui ) {
-				return $( "<a href=\"" + theURI + "\">"+ theText + "</a>" );
-			} });// /draggable
+				helper: "clone"
+					//function( event, ui ) {
+					//return $( "<a href=\"" + theURI + "\">"+ theText + "</a>" );
+			});// /draggable
+			$( ".droppable" ).droppable({
+				accept: ".draggable",
+				activeClass: "droppable-active",
+				drop: function( event, ui ) {
+					console.log("URI: ",theURI,", Text: ",theText);
+					var newListItem = '<li class="graph-legend"><a href=\"'+theURI+'\">'+theText+'</a></li>';
+					$(this).find("ul").append(newListItem);
+				}// /drop
+			});// /droppable
 		});// /function
+		
+		
+		
 	</script>
   </head>
   <body onload="SemantEco.initialize()">
@@ -43,6 +85,10 @@
             <div class="search button">Search</div>
           </div>
           <div id="display">
+			<div id="drop-legend" style="height:500px;width:250px;" class="droppable">
+				<p>Drop Characteristics here to graph:</p>
+				<ul></ul>
+			</div>
             <div id="map_canvas"></div>
             <div id="page">&nbsp;</div>
           </div>
