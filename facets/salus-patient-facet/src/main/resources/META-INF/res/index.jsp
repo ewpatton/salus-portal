@@ -41,6 +41,7 @@
 		var activeGraph = [];
 		
 		var lineColor = d3.scale.category10();
+		var patientData;
 		
 		$(function() {
 			var theText, theURI;
@@ -59,13 +60,22 @@
 				accept: ".draggable",
 				activeClass: "droppable-active",
 				drop: function( event, ui ) {
-					console.log("URI: ",theURI,", Text: ",theText);
+					activeGraph.push(theURI);
 					var newListItem = '<li class="graph-legend"><a href=\"'+theURI+'\">'+theText+'</a></li>';
 					$(this).find("ul").append(newListItem);
+					//$.bbq.pushState({"characteristic":theURI});
+					var theData = PatientModule.getPatientMeasurements({"characteristic":theURI}, getPatientDataCallback);
 				}// /drop
 			});// /droppable
 		});// /function
 		
+		function getPatientDataCallback(data){
+			console.log("patient data returned:");
+			data=JSON.parse(data);
+			console.log(data);
+			patientData=data.results.bindings;
+			// graph stuff!
+		}
 		
 		
 	</script>
@@ -85,7 +95,7 @@
             <div class="search button">Search</div>
           </div>
           <div id="display">
-			<div id="drop-legend" style="height:500px;width:250px;" class="droppable">
+			<div id="drop-legend" style="height:500px;width:200px;" class="droppable">
 				<p>Drop Characteristics here to graph:</p>
 				<ul></ul>
 			</div>
