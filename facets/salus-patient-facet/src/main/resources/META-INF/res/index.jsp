@@ -40,8 +40,21 @@
 		// Will hold the list of characteristics 
 		var activeGraph = [];
 		
-		var lineColor = d3.scale.category10();
 		var patientData;
+		
+		// Graphing variable initilizations:
+		var margin = {top: 20, right: 20, bottom: 30, left: 50},
+			width = 650 - margin.left - margin.right,
+			height = 500 - margin.top - margin.bottom;
+		var parseDate = d3.time.format("%d-%b-%y").parse; // what is the format of the dates in the returned JSON object?
+		
+		var x = d3.time.scale()
+			.range([0, width]);
+		var y = d3.scale.linear()
+			.range([height, 0]);
+			
+		var lineColor = d3.scale.category10();
+		
 		
 		$(function() {
 			var theText, theURI;
@@ -72,10 +85,53 @@
 		function getPatientDataCallback(data){
 			console.log("patient data returned:");
 			data=JSON.parse(data);
-			console.log(data);
 			patientData=data.results.bindings;
+			console.log(patientData);
 			// graph stuff!
-		}
+			graphPatientData(patientData);
+			}
+			
+		function graphPatientData(data){
+			var xAxis = d3.svg.axis()
+				.scale(x)
+				.orient("bottom");
+			var yAxis = d3.svg.axis()
+				.scale(y)
+				.orient("left");
+				
+			var line = d3.svg.line()
+				.x(function(d) { return x(d.date); })
+				.y(function(d) { return y(d.value); });
+			
+			var svg = d3.select("#map_canvas").append("svg")
+				.attr("width", width + margin.left + margin.right)
+				.attr("height", height + margin.top + margin.bottom)
+				.append("g")
+				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+				
+			var data = JSON.parse(patientData);
+
+			x.domain(d3.extent(data, function(d) { return d.date; }));
+			y.domain(d3.extent(data, function(d) { return d.value; }));
+
+			svg.append("g")
+				.attr("class", "x axis")
+				.attr("transform", "translate(0," + height + ")")
+				.call(xAxis);
+			svg.append("g")
+				.attr("class", "y axis")
+				.call(yAxis)
+				.append("text")
+				.attr("transform", "rotate(-90)")
+				.attr("y", 6)
+				.attr("dy", ".71em")
+				.style("text-anchor", "end")
+				.text("Value");
+			svg.append("path")
+				.datum(data)
+				.attr("class", "line")
+				.attr("d", line);
+		}// /graphPatientData
 		
 		
 	</script>
