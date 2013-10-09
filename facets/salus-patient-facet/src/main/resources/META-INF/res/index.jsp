@@ -46,7 +46,7 @@
 		var margin = {top: 20, right: 20, bottom: 30, left: 50},
 			width = 650 - margin.left - margin.right,
 			height = 500 - margin.top - margin.bottom;
-		var parseDate = d3.time.format("%d-%b-%y").parse; // what is the format of the dates in the returned JSON object?
+		var parseDate = d3.time.format("%Y-%m-%d").parse; // what is the format of the dates in the returned JSON object?
 		
 		var x = d3.time.scale()
 			.range([0, width]);
@@ -77,7 +77,7 @@
 					var newListItem = '<li class="graph-legend"><a href=\"'+theURI+'\">'+theText+'</a></li>';
 					$(this).find("ul").append(newListItem);
 					//$.bbq.pushState({"characteristic":theURI});
-					var theData = PatientModule.getPatientMeasurements({"characteristic":theURI}, getPatientDataCallback);
+					var theData = PatientModule.getPatientMeasurements({"characteristic":[theURI]}, getPatientDataCallback);
 				}// /drop
 			});// /droppable
 		});// /function
@@ -100,19 +100,26 @@
 				.orient("left");
 				
 			var line = d3.svg.line()
-				.x(function(d) { return x(d.date); })
-				.y(function(d) { return y(d.value); });
+			    .interpolate("linear")
+				.x(function(d) {
+					return x(parseDate(d.date.value));
+				})
+				.y(function(d) {
+					return y(d.value.value);
+			    });
 			
 			var svg = d3.select("#map_canvas").append("svg")
 				.attr("width", width + margin.left + margin.right)
 				.attr("height", height + margin.top + margin.bottom)
 				.append("g")
 				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-				
-			var data = JSON.parse(patientData);
 
-			x.domain(d3.extent(data, function(d) { return d.date; }));
-			y.domain(d3.extent(data, function(d) { return d.value; }));
+			var data = typeof data === "string" ? JSON.parse(data) : data;
+
+			x.domain(d3.extent(data, function(d) {
+				return parseDate(d.date.value);
+			}));
+			y.domain(d3.extent(data, function(d) { return d.value.value; }));
 
 			svg.append("g")
 				.attr("class", "x axis")
@@ -128,9 +135,9 @@
 				.style("text-anchor", "end")
 				.text("Value");
 			svg.append("path")
-				.datum(data)
-				.attr("class", "line")
-				.attr("d", line);
+			    .attr("stroke", "#000")
+			    .attr("fill", "none")
+			    .data([data]).attr("d", line);
 		}// /graphPatientData
 		
 		

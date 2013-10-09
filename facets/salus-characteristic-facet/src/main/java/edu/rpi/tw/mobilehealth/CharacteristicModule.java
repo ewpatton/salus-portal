@@ -51,21 +51,22 @@ public class CharacteristicModule implements Module {
         JSONArray characteristicUri = (JSONArray)request
                 .getParam("characteristic");
         if ( characteristicUri == null ) {
+            LOG.debug("No characteristic URI, not modifying query");
             return;
         }
         if ( characteristicUri.length() == 0 ) {
+            LOG.debug("Characteristic array of length zero, not modifying query");
             return;
         }
+        LOG.debug("Characteristic array = " + characteristicUri);
         final HealthQueryVarUtils vars = new HealthQueryVarUtils(query);
-        final QueryResource rdfType = query.getResource(RDF_NS + "type");
-        final QueryResource bloodMeasurement =
-                query.getResource(HEALTH_NS + "BloodMeasurement");
         final QueryResource ofCharacteristic =
                 query.getResource(HEALTH_NS + "ofCharacteristic");
         final List<GraphComponentCollection> graphs =
                 query.findGraphComponentsWithPattern(vars.measurement(),
-                        rdfType, bloodMeasurement);
+                        ofCharacteristic, vars.characteristic());
         if ( graphs.isEmpty() ) {
+            LOG.debug("Could not find patterns with " + vars.characteristic());
             return;
         }
         for(GraphComponentCollection coll : graphs) {

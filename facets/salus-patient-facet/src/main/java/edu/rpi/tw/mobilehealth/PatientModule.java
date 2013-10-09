@@ -19,6 +19,7 @@ import edu.rpi.tw.escience.semanteco.QueryMethod;
 import edu.rpi.tw.escience.semanteco.Request;
 import edu.rpi.tw.escience.semanteco.SemantEcoUI;
 import edu.rpi.tw.escience.semanteco.query.Query;
+import edu.rpi.tw.escience.semanteco.query.Query.SortType;
 import edu.rpi.tw.escience.semanteco.query.Query.Type;
 import edu.rpi.tw.escience.semanteco.query.QueryResource;
 import edu.rpi.tw.escience.semanteco.query.Variable;
@@ -131,6 +132,7 @@ public class PatientModule implements Module, ProvidesDomain {
         query.addPattern(vars.measurement(), res.healthHasUnit(), vars.unit());
         query.addPattern(vars.measurement(), res.dcDate(), vars.date());
         query.addPattern(vars.characteristic(), res.rdfsLabel(), vars.label());
+        query.addOrderBy(vars.date(), SortType.ASC);
         return config.getQueryExecutor(request).accept("application/json")
                 .executeLocalQuery(query);
     }
