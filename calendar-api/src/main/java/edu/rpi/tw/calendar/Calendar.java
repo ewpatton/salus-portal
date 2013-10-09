@@ -82,6 +82,13 @@ public interface Calendar extends Iterable<Event> {
     public String getDisplayName();
 
     /**
+     * Returns the account name, if any, that this calendar originates from.
+     * @return A string containing an account name, otherwise null (e.g., if
+     * the account is local)
+     */
+    String getAccountName();
+
+    /**
      * Returns whether the calendar is visible in the underlying calendar API.
      * Depending on the implementation, this may have further implications for
      * other methods.

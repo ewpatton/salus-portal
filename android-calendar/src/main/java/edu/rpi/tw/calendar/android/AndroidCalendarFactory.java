@@ -44,11 +44,11 @@ public class AndroidCalendarFactory implements CalendarFactory {
             cur = cr.query(uri, PROJECTION, null, null, null);
             calendars = new HashMap<String, Calendar>();
             while( cur.moveToNext() ) {
-                Calendar c = new AndroidCalendar( cr, cur.getLong( 0 ),
-                        cur.getString( 1 ), cur.getString( 4 ) );
                 String name = "urn:ical:" + esc( cur.getString( 1 ) ) +
                         ":" + esc( cur.getString( 2 ) ) + ":" +
                         esc( cur.getString( 3 ) );
+                Calendar c = new AndroidCalendar( cr, cur.getLong( 0 ),
+                        name, cur.getString( 1 ), cur.getString( 4 ) );
                 calendars.put( name, c );
             }
         } finally {

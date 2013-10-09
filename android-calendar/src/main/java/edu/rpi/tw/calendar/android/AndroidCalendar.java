@@ -23,11 +23,13 @@ class AndroidCalendar implements Calendar {
     private final long _id;
     private String accountName;
     private String displayName;
+    private String calName;
 
-    AndroidCalendar( ContentResolver cr, long _id, String accountName,
-            String displayName ) {
+    AndroidCalendar( ContentResolver cr, long _id, String calName,
+            String accountName, String displayName ) {
         this.resolver = cr;
         this._id = _id;
+        this.calName = calName;
         this.accountName = accountName;
         this.displayName = displayName;
     }
@@ -168,7 +170,7 @@ class AndroidCalendar implements Calendar {
 
     @Override
     public String getName() {
-        return accountName;
+        return calName;
     }
 
     @Override
@@ -202,5 +204,10 @@ class AndroidCalendar implements Calendar {
     @Override
     public String toString() {
         return "calendar " + _id + " (" + accountName + "): " + displayName;
+    }
+
+    @Override
+    public String getAccountName() {
+        return accountName;
     }
 }
