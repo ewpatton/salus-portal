@@ -42,10 +42,10 @@
 		
 		var patientData;
 		
-		// Graphing variable initilizations:
+		// Graphing variable initializations:
 		var margin = {top: 20, right: 20, bottom: 30, left: 50},
-			width = 650 - margin.left - margin.right,
-			height = 500 - margin.top - margin.bottom;
+			width = 550 - margin.left - margin.right,
+			height = 450 - margin.top - margin.bottom;
 		var parseDate = d3.time.format("%Y-%m-%d").parse; // what is the format of the dates in the returned JSON object?
 		
 		var x = d3.time.scale()
@@ -66,8 +66,6 @@
 					theURI = $(this).attr('href');
 				},
 				helper: "clone"
-					//function( event, ui ) {
-					//return $( "<a href=\"" + theURI + "\">"+ theText + "</a>" );
 			});// /draggable
 			$( ".droppable" ).droppable({
 				accept: ".draggable",
@@ -85,11 +83,12 @@
 		function getPatientDataCallback(data){
 			console.log("patient data returned:");
 			data=JSON.parse(data);
-			patientData=data.results.bindings;
+			patientData = data.results.bindings;
+			activeGraph.push(patientData);
 			console.log(patientData);
 			// graph stuff!
 			graphPatientData(patientData);
-			}
+		}
 			
 		function graphPatientData(data){
 			var xAxis = d3.svg.axis()
@@ -157,12 +156,12 @@
             </div>
             <div class="search button">Search</div>
           </div>
-          <div id="display">
-			<div id="drop-legend" style="height:500px;width:200px;" class="droppable">
+          <div id="display" style="position:relative;">
+			<div id="drop-legend" style="float:left;height:500px;width:200px;" class="droppable">
 				<p>Drop Characteristics here to graph:</p>
 				<ul></ul>
 			</div>
-            <div id="map_canvas"></div>
+            <div id="map_canvas" style="float:center"></div>
             <div id="page">&nbsp;</div>
           </div>
           <div class="clear" style="clear:both;"></div>
