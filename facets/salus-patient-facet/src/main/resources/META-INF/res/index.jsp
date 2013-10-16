@@ -44,8 +44,8 @@
 		
 		// Graphing variable initializations:
 		var margin = {top: 20, right: 20, bottom: 30, left: 50},
-			width = 550 - margin.left - margin.right,
-			height = 450 - margin.top - margin.bottom;
+			width = 700 - margin.left - margin.right,
+			height = 500 - margin.top - margin.bottom;
 		var parseDate = d3.time.format("%Y-%m-%d").parse; // what is the format of the dates in the returned JSON object?
 		
 		var x = d3.time.scale()
@@ -118,8 +118,8 @@
 			x.domain(d3.extent(data, function(d) {
 				return parseDate(d.date.value);
 			}));
-			y.domain(d3.extent(data, function(d) { return d.value.value; }));
-
+			y.domain(d3.extent(data, function(d) { return parseInt(d.value.value); }));
+			
 			svg.append("g")
 				.attr("class", "x axis")
 				.attr("transform", "translate(0," + height + ")")
