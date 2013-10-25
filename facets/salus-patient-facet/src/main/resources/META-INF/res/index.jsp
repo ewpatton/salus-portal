@@ -43,7 +43,7 @@
 		var patientData;
 		
 		// Graphing variable initializations:
-		var margin = {top: 20, right: 20, bottom: 30, left: 50},
+		var margin = {top: 20, right: 20, bottom: 50, left: 50},
 			width = 700 - margin.left - margin.right,
 			height = 500 - margin.top - margin.bottom;
 		var parseDate = d3.time.format("%Y-%m-%d").parse; // what is the format of the dates in the returned JSON object?
@@ -91,13 +91,14 @@
 		}
 			
 		function graphPatientData(data){
+			
 			var xAxis = d3.svg.axis()
 				.scale(x)
 				.orient("bottom");
 			var yAxis = d3.svg.axis()
 				.scale(y)
 				.orient("left");
-				
+		
 			var line = d3.svg.line()
 			    .interpolate("linear")
 				.x(function(d) {
@@ -113,17 +114,25 @@
 				.append("g")
 				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-			var data = typeof data === "string" ? JSON.parse(data) : data;
+			var parsed = typeof data === "string" ? JSON.parse(data) : data;
+			console.log(parsed);
 
-			x.domain(d3.extent(data, function(d) {
+			x.domain(d3.extent(parsed, function(d) {
 				return parseDate(d.date.value);
 			}));
-			y.domain(d3.extent(data, function(d) { return parseInt(d.value.value); }));
+			y.domain(d3.extent(parsed, function(d) { return parseInt(d.value.value); }));
 			
 			svg.append("g")
 				.attr("class", "x axis")
 				.attr("transform", "translate(0," + height + ")")
-				.call(xAxis);
+				.call(xAxis)
+				.selectAll("text")  
+					.style("text-anchor", "end")
+					.attr("dx", "-.8em")
+					.attr("dy", ".15em")
+					.attr("transform", function(d) {
+						return "rotate(-65)" 
+					});
 			svg.append("g")
 				.attr("class", "y axis")
 				.call(yAxis)
@@ -132,11 +141,11 @@
 				.attr("y", 6)
 				.attr("dy", ".71em")
 				.style("text-anchor", "end")
-				.text("Value");
+				.text(parsed[0].characteristic.value.split('#')[1]);
 			svg.append("path")
 			    .attr("stroke", "#000")
 			    .attr("fill", "none")
-			    .data([data]).attr("d", line);
+			    .data([parsed]).attr("d", line);
 		}// /graphPatientData
 		
 		
