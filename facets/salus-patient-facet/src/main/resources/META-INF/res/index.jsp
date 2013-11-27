@@ -8,6 +8,13 @@
     <core:styles />
     <module:styles />
 	<style>
+		.ui-draggable-helper{
+			z-index: 100;
+			border: 1px solid #000;
+			padding: 6px;
+			background: #fff;
+			font-size: 1.2em;
+		}
 		.droppable{
 			border-style:solid;
 			border-width:1px;
@@ -74,27 +81,22 @@
 						shape: 'squarepin'
 					}]// /series
 			});// /new chart
-		});// /function
-		
-		$(function() {
 			var theText, theURI;
 			$( ".draggable" ).draggable({ 
 				opacity: 0.7,  
 				revert: "invalid",
+				helper: "clone",
 				start: function (event, ui) {
 					theText = $(this).text();
 					theURI = $(this).attr('href');
-				},
-				helper: "clone"
+					$(ui.helper).addClass("ui-draggable-helper");
+				}
 			});// /draggable
 			$( ".droppable" ).droppable({
 				accept: ".draggable",
 				activeClass: "droppable-active",
 				drop: function( event, ui ) {
-					activeGraph.push(theURI);
-					//var newListItem = '<li class="graph-legend"><a href=\"'+theURI+'\">'+theText+'</a></li>';
-					//$(this).find("ul").append(newListItem);
-					//$.bbq.pushState({"characteristic":theURI});
+					chart.showLoading();
 					var theData = PatientModule.getPatientMeasurements({"characteristic":[theURI]}, getPatientDataCallback);
 				}// /drop
 			});// /droppable
@@ -104,7 +106,6 @@
 			console.log("patient data returned:");
 			data=JSON.parse(data);
 			patientData = data.results.bindings;
-			//activeGraph.push(patientData);
 			console.log(patientData);
 			// graph stuff!
 			graphPatientData(patientData);
@@ -114,9 +115,10 @@
 			var newSeries = []; 
 			var seriesData = [];
 			newSeries.name = theData[0].label.value;
-			newSeries.unit = theData[0].unit.value.split("#")[1];
+			units = theData[0].unit.value.split("#")[1];
+			activeGraph.push([newSeries.name,units]);
 			$.each(theData, function(index,dataEntry){
-				if(theData[index].unit.value.split("#")[1] == newSeries.unit){
+				if(theData[index].unit.value.split("#")[1] == units){
 					seriesData.push([Date.parse(theData[index].date.value), parseFloat(theData[index].value.value)]);
 				}
 			});// /each
@@ -127,9 +129,8 @@
 		function graphPatientData(theData){
 			theSeries = parseToSeries(theData);
 			chart.addSeries(theSeries);
+			chart.hideLoading();
 		}// /graphPatientData
-		
-		
 	</script>
   </head>
   <body onload="SemantEco.initialize()">
