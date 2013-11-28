@@ -52,15 +52,18 @@
 						text: 'drag and drop characteristics to add to the chart',
 					},
 					tooltip : {
-						shared: true/*,
+						shared: true,
 						formatter: function() {
-							var s = [];
+							var pointUnit;
+							var s = '<span style="font-size:10px;">' + this.x + "</span><br/>";
 							$.each(this.points, function(i, point) {
-								s.push('<span>'+ point.series.name +' '+
-								point.y + point.series.unit + '<span>');
+								var color = point.series.color;
+								pointUnit = (findElement(activeGraph, "characteristic", point.series.name)).units;
+								s += '<span style="color:'+color+'; font-weight:bold;">' + point.series.name +'</span> '+
+									point.y + ' ' + pointUnit + '<br/>';
 							});
-							return s.join('\n');
-						}*/// /formatter function
+							return s;
+						}// /formatter function
 					},
 					series : [{
 						type: 'flags',
@@ -96,6 +99,11 @@
 				accept: ".draggable",
 				activeClass: "droppable-active",
 				drop: function( event, ui ) {
+					var check = findElement(activeGraph, "characteristic", theText);
+					if (check != undefined){
+						console.log("Characteristic already in active graph");
+						return;
+					}
 					chart.showLoading();
 					var theData = PatientModule.getPatientMeasurements({"characteristic":[theURI]}, getPatientDataCallback);
 				}// /drop
@@ -106,6 +114,11 @@
 			console.log("patient data returned:");
 			data=JSON.parse(data);
 			patientData = data.results.bindings;
+			if(patientData.length == 0){
+				console.log("No data returned!");
+				chart.hideLoading();
+				return;
+			}
 			console.log(patientData);
 			// graph stuff!
 			graphPatientData(patientData);
@@ -116,15 +129,26 @@
 			var seriesData = [];
 			newSeries.name = theData[0].label.value;
 			units = theData[0].unit.value.split("#")[1];
-			activeGraph.push([newSeries.name,units]);
 			$.each(theData, function(index,dataEntry){
 				if(theData[index].unit.value.split("#")[1] == units){
 					seriesData.push([Date.parse(theData[index].date.value), parseFloat(theData[index].value.value)]);
 				}
 			});// /each
 			newSeries.data = seriesData;
+			activeGraph.push({
+				characteristic: newSeries.name,
+				units: units,
+				data: seriesData
+			});
 			return newSeries;
 		}// /parseToSeries
+		
+		function findElement(arr, propName, propValue) {
+			for (var i=0; i < arr.length; i++)
+				if (arr[i][propName] == propValue)
+					return arr[i];
+			console.log(propValue + " not found in array");
+		}// /findElement
 		
 		function graphPatientData(theData){
 			theSeries = parseToSeries(theData);
