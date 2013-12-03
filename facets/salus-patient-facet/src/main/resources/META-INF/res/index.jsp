@@ -55,7 +55,8 @@
 						shared: true,
 						formatter: function() {
 							var pointUnit;
-							var s = '<span style="font-size:10px;">' + this.x + "</span><br/>";
+							var date =  Highcharts.dateFormat("%Y-%m-%d", new Date(this.x));
+							var s = '<span style="font-size:10px;">' + date + "</span><br/>";
 							$.each(this.points, function(i, point) {
 								var color = point.series.color;
 								pointUnit = (findElement(activeGraph, "characteristic", point.series.name)).units;
@@ -150,9 +151,17 @@
 			console.log(propValue + " not found in array");
 		}// /findElement
 		
+		function updateLegend(){
+			var lastItem = chart.series[series.length-1];
+			lastItem.options.showInLegend = true;
+			chart.legend.renderItem(lastItem);
+			chart.legend.render();
+		}// /updateLegend
+		
 		function graphPatientData(theData){
 			theSeries = parseToSeries(theData);
 			chart.addSeries(theSeries);
+			// remove "loading" overlay
 			chart.hideLoading();
 		}// /graphPatientData
 	</script>
