@@ -101,10 +101,11 @@
 				activeClass: "droppable-active",
 				drop: function( event, ui ) {
 					var check = findElement(activeGraph, "characteristic", theText);
-					if (check != undefined){
+					if (check != null){
 						console.log("Characteristic already in active graph");
 						return;
 					}
+					console.log("Characteristic not in active graph, making server call....");
 					chart.showLoading();
 					var theData = PatientModule.getPatientMeasurements({"characteristic":[theURI]}, getPatientDataCallback);
 				}// /drop
@@ -136,6 +137,13 @@
 				}
 			});// /each
 			newSeries.data = seriesData;
+			if(findElement(activeGraph,"units",units) == null){
+				chart.addAxis({
+					title: {
+						text: units
+					}
+				});
+			}
 			activeGraph.push({
 				characteristic: newSeries.name,
 				units: units,
@@ -148,15 +156,8 @@
 			for (var i=0; i < arr.length; i++)
 				if (arr[i][propName] == propValue)
 					return arr[i];
-			console.log(propValue + " not found in array");
+			return null;
 		}// /findElement
-		
-		function updateLegend(){
-			var lastItem = chart.series[series.length-1];
-			lastItem.options.showInLegend = true;
-			chart.legend.renderItem(lastItem);
-			chart.legend.render();
-		}// /updateLegend
 		
 		function graphPatientData(theData){
 			theSeries = parseToSeries(theData);
