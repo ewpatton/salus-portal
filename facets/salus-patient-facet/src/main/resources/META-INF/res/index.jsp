@@ -32,7 +32,7 @@
 	<script>
 		// Will hold the list of characteristics 
 		var activeGraph = [];
-		var patientData;
+		var patientData, regData;
 		var chart;
 		
 		// default chart
@@ -107,7 +107,9 @@
 					}
 					console.log("Characteristic not in active graph, making server call....");
 					chart.showLoading();
+					console.log(theText + ", " + theURI);
 					var theData = PatientModule.getPatientMeasurements({"characteristic":[theURI]}, getPatientDataCallback);
+					var theReg = RegulationModule.getThresholds({"characteristic":["\"" + theText + "\""]}, getRegCallback);
 				}// /drop
 			});// /droppable
 		});// /function
@@ -124,6 +126,18 @@
 			console.log(patientData);
 			// graph stuff!
 			graphPatientData(patientData);
+		}
+		
+		function getRegCallback(data){
+			console.log("threshold data returned:");
+			/*data=JSON.parse(data);
+			regData = data.results.bindings;
+			if(regData.length == 0){
+				console.log("No threshold data returned!");
+				chart.hideLoading();
+				return;
+			}*/
+			console.log(data);
 		}
 		
 		function parseToSeries(theData){
