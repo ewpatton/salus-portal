@@ -30,6 +30,11 @@ import edu.rpi.tw.mobilehealth.util.HealthQueryVarUtils;
 import static edu.rpi.tw.escience.semanteco.util.QueryResourceUtils.RDFS_NS;
 import static edu.rpi.tw.mobilehealth.util.HealthQueryResourceUtils.HEALTH_NS;
 
+/**
+ * The Patient module provides a facet for exploring patient data.
+ * @author ewpatton
+ *
+ */
 public class PatientModule implements Module, ProvidesDomain {
 
     private ModuleConfiguration config = null;
@@ -143,7 +148,9 @@ public class PatientModule implements Module, ProvidesDomain {
         Domain health = config.getDomain(URI.create(HEALTH_NS), true);
         health.setLabel("Health");
         health.addSource(URI.create("http://mobilehealth.tw.rpi.edu/source/amc-edu"), "Albany Medical");
-        health.addRegulation(URI.create("http://mobilehealth.tw.rpi.edu/ontology/ref-range-female.ttl#"), "Blood Ref. Range (Female)");
+        //health.addRegulation(URI.create("http://mobilehealth.tw.rpi.edu/ontology/ref-range-female.ttl#"), "Blood Ref. Range (Female)");
+        //health.addRegulation(URI.create("file:///Users/ewpatton/Programming/salus-ontologies/src/main/resources/female-bloodwork.ttl#"), "Blood Ref. Range (Female)");
+        health.addRegulation(URI.create("http://orion.tw.rpi.edu/~pattoe/female-bloodwork.ttl#"), "Blood Ref. Range (Female)");
         health.addDataType("bloodwork", "Bloodwork", config.getResource("128px-Blood_drop.svg.png"));
         domains.add(health);
         return domains;

@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>android-calendar</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>android calendar api impl</name>
@@ -38,7 +38,7 @@
     <dependency>
       <groupId>edu.rpi.tw</groupId>
       <artifactId>calendar-api</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

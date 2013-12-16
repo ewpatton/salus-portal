@@ -23,6 +23,7 @@ import edu.rpi.tw.escience.semanteco.query.Query;
 import edu.rpi.tw.escience.semanteco.query.QueryResource;
 import edu.rpi.tw.escience.semanteco.query.Query.Type;
 import edu.rpi.tw.escience.semanteco.query.Variable;
+import edu.rpi.tw.mobilehealth.util.HealthQueryResourceUtils;
 import edu.rpi.tw.mobilehealth.util.HealthQueryVarUtils;
 
 public class CharacteristicModule implements Module {
@@ -59,6 +60,11 @@ public class CharacteristicModule implements Module {
             return;
         }
         LOG.debug("Characteristic array = " + characteristicUri);
+        augmentWhenProperty( query, characteristicUri );
+        augmentWhenOWLRestriction( query, characteristicUri );
+    }
+
+    private void augmentWhenProperty(final Query query, final JSONArray uris) {
         final HealthQueryVarUtils vars = new HealthQueryVarUtils(query);
         final QueryResource ofCharacteristic =
                 query.getResource(HEALTH_NS + "ofCharacteristic");
@@ -70,12 +76,26 @@ public class CharacteristicModule implements Module {
             return;
         }
         for(GraphComponentCollection coll : graphs) {
-            for(int i=0; i<characteristicUri.length(); i++) {
+            for(int i=0; i<uris.length(); i++) {
                 final QueryResource characteristic =
-                        query.getResource(characteristicUri.optString(i));
+                        query.getResource(uris.optString(i));
                 coll.addPattern(vars.measurement(), ofCharacteristic,
                         characteristic);
             }
+        }
+    }
+
+    private void augmentWhenOWLRestriction(final Query query, final JSONArray uris) {
+        final HealthQueryVarUtils vars = new HealthQueryVarUtils(query);
+        final HealthQueryResourceUtils res = new HealthQueryResourceUtils(query);
+        final List<GraphComponentCollection> graphs =
+                query.findGraphComponentsWithPattern(null, res.owlOnProperty(),
+                        res.healthOfCharacteristic());
+        if ( graphs.isEmpty() ) {
+            LOG.debug("Could not find patterns with " + vars.characteristic());
+            return;
+        }
+        for(GraphComponentCollection coll : graphs) {
         }
     }
 

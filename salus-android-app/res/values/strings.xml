@@ -17,5 +17,6 @@
     <string name="action_characteristics">Characteristics</string>
     <string name="action_show_limits">Show Limits</string>
     <string name="action_hide_limits">Hide Limits</string>
+    <string name="title_activity_vitals_log">VitalsLogActivity</string>
 
 </resources>

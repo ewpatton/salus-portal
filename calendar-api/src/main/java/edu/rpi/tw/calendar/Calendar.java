@@ -61,12 +61,12 @@ public interface Calendar extends Iterable<Event> {
 
     /**
      * Obtains an event in the calendar with a specific identifier.
-     * @param _id
+     * @param id
      * @return An {@link Event} object if the identifier denotes an event in
      * the calendar, or null if the identifier is not valid or the event has
      * been deleted.
      */
-    public Event getEventById(long _id);
+    public Event getEventById(long id);
 
     /**
      * Gets the name for this calendar.
