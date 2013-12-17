@@ -28,7 +28,7 @@
 	</style>
     <core:scripts />
     <module:scripts />
-	<script src="http://code.highcharts.com/stock/highstock.js"></script>
+	<script src="js/highstock.js"></script>
 	<script>
 		// Will hold the list of characteristics 
 		var activeGraph = [];
@@ -71,16 +71,16 @@
 						name: 'Placeholder flags',
 						data: [{
 							x: Date.UTC(2013, 7, 14),
-							title: 'Placeholder'
+							title: 'Appt: Dr. Smith'
 						}, {
 							x: Date.UTC(2013, 8, 1),
-							title: 'Placeholder'
+							title: 'Steroids'
 						}, {
 							x: Date.UTC(2013, 8, 15),
-							title: 'Placeholder'
+							title: 'Surgery'
 						}, {
 							x: Date.UTC(2013, 9, 28),
-							title: 'Placeholder'
+							title: 'Appt: Dr. Smith'
 						}],
 						shape: 'squarepin'
 					}]// /series
@@ -107,9 +107,8 @@
 					}
 					console.log("Characteristic not in active graph, making server call....");
 					chart.showLoading();
-					console.log(theText + ", " + theURI);
+					//console.log(theText + ", " + theURI);
 					var theData = PatientModule.getPatientMeasurements({"characteristic":[theURI]}, getPatientDataCallback);
-					var theReg = RegulationModule.getThresholds({"characteristic":["\"" + theText + "\""]}, getRegCallback);
 				}// /drop
 			});// /droppable
 		});// /function
@@ -130,20 +129,21 @@
 		
 		function getRegCallback(data){
 			console.log("threshold data returned:");
-			/*data=JSON.parse(data);
+			data=JSON.parse(data);
 			regData = data.results.bindings;
 			if(regData.length == 0){
 				console.log("No threshold data returned!");
 				chart.hideLoading();
 				return;
-			}*/
-			console.log(data);
+			}
+			console.log(regData);
 		}
-		
+			
 		function parseToSeries(theData){
 			var newSeries = []; 
 			var seriesData = [];
 			newSeries.name = theData[0].label.value;
+			seriesURI = theData[0].characteristic.value;
 			units = theData[0].unit.value.split("#")[1];
 			$.each(theData, function(index,dataEntry){
 				if(theData[index].unit.value.split("#")[1] == units){
@@ -159,6 +159,7 @@
 				});
 			}
 			activeGraph.push({
+				uri: seriesURI,
 				characteristic: newSeries.name,
 				units: units,
 				data: seriesData
@@ -178,6 +179,10 @@
 			chart.addSeries(theSeries);
 			// remove "loading" overlay
 			chart.hideLoading();
+			console.log("making server call for threshold values....");
+			if(!regData){
+				var theReg = RegulationModule.getThresholds({"characteristic":[seriesURI]}, getRegCallback);
+			}
 		}// /graphPatientData
 	</script>
   </head>
