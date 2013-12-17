@@ -39,7 +39,9 @@
 		$(function(){
 			chart = new Highcharts.StockChart({
 					chart: {
-						renderTo: 'map_canvas'
+						renderTo: 'map_canvas',
+						zoomType: 'xy',
+						pinchType: 'xy'
 					},
 					plotBorderWidth: 2,
 					rangeSelector : {
@@ -66,21 +68,32 @@
 							return s;
 						}// /formatter function
 					},
+					xAxis : {
+						endOnTick: true,
+						maxPadding: 0.10,
+						minPadding: 0.10
+					},
 					series : [{
 						type: 'flags',
 						name: 'Placeholder flags',
 						data: [{
-							x: Date.UTC(2013, 7, 14),
-							title: 'Appt: Dr. Smith'
-						}, {
-							x: Date.UTC(2013, 8, 1),
-							title: 'Steroids'
-						}, {
-							x: Date.UTC(2013, 8, 15),
-							title: 'Surgery'
-						}, {
+							x: Date.UTC(2013, 7, 19),
+							title: 'steroids'
+						},{
+							x: Date.UTC(2013, 7, 20),
+							title: 'steroids'
+						},{
+							x: Date.UTC(2013, 7, 27),
+							title: 'surgery'
+						},{
+							x: Date.UTC(2013, 8, 3),
+							title: 'steroids'
+						},{
+							x: Date.UTC(2013, 8, 10),
+							title: 'steroids'
+						},{
 							x: Date.UTC(2013, 9, 28),
-							title: 'Appt: Dr. Smith'
+							title: 'appointment'
 						}],
 						shape: 'squarepin'
 					}]// /series
@@ -107,7 +120,6 @@
 					}
 					console.log("Characteristic not in active graph, making server call....");
 					chart.showLoading();
-					//console.log(theText + ", " + theURI);
 					var theData = PatientModule.getPatientMeasurements({"characteristic":[theURI]}, getPatientDataCallback);
 				}// /drop
 			});// /droppable
@@ -127,7 +139,7 @@
 			graphPatientData(patientData);
 		}
 		
-		function getRegCallback(data){
+		function addPlotBar(data){
 			console.log("threshold data returned:");
 			data=JSON.parse(data);
 			regData = data.results.bindings;
@@ -136,7 +148,43 @@
 				chart.hideLoading();
 				return;
 			}
-			console.log(regData);
+			var thresh = filterThresholds();
+			console.log(thresh);
+			var newBar = [];
+			// from < to
+			var a = parseFloat(thresh[0].limit.value)
+			var b = parseFloat(thresh[1].limit.value)
+			if(a < b){
+				newBar.push({
+					from: a,
+					to: b,
+					color: "#dddddd",
+					label: "Normal Range"
+				});
+			}
+			else if( a >= b){
+				newBar.push({
+					from: b,
+					to: a,
+					color: "#dddddd",
+					label: "Normal Range"
+				});
+			}		
+			else console.log("wat do?");
+			console.log(newBar);
+			chart.yAxis[0].addPlotBand(newBar[0]);
+		}
+		
+		// NOTE 12/17: this method may become unnecessary when server-side filtering is implemented
+		function filterThresholds(){
+			var chara = activeGraph[(activeGraph.length)-1].uri.split("#")[1];
+			var needed = [];
+			$.each(regData, function(index,regEntry){
+				if(regData[index].characteristic.value.split("#")[1] == chara){
+					needed.push(regEntry);
+				}
+			});// /each
+			return needed;
 		}
 			
 		function parseToSeries(theData){
@@ -177,13 +225,14 @@
 		function graphPatientData(theData){
 			theSeries = parseToSeries(theData);
 			chart.addSeries(theSeries);
-			// remove "loading" overlay
-			chart.hideLoading();
 			console.log("making server call for threshold values....");
 			if(!regData){
-				var theReg = RegulationModule.getThresholds({"characteristic":[seriesURI]}, getRegCallback);
+				// NOTE 12/17: returns threshold data for ALL characteristics in the ontology
+				var theReg = RegulationModule.getThresholds({"characteristic":[seriesURI]}, addPlotBar);
 			}
-		}// /graphPatientData
+			// remove "loading" overlay
+			chart.hideLoading();
+ 		}// /graphPatientData
 	</script>
   </head>
   <body onload="SemantEco.initialize()">
