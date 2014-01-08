@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:ical="http://www.w3.org/2002/12/cal/ical#"
+    xmlns="http://tw.rpi.edu/medical_effects#"
+  xml:base="http://tw.rpi.edu/medical_effects" > 
+  <rdf:Description rdf:about="ical:Vevent">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+  </rdf:Description>
+    <rdf:Description rdf:about="#hasStart">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+    <rdfs:domain rdf:resource="#Effect"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#Measurement">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#generates">
+    <rdfs:range rdf:resource="#Effect"/>
+    <rdfs:domain rdf:resource="ical:Vevent"/>
+  </rdf:Description>
+ 
+  <rdf:Description rdf:about="#generated_by">
+    <rdfs:domain rdf:resource="#Effect"/>
+    <rdfs:range rdf:resource="ical:Vevent"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#Effect">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#hasEnd">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+    <rdfs:domain rdf:resource="#Effect"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#affects">
+    <rdfs:range rdf:resource="#Measurement"/>
+    <rdfs:domain rdf:resource="#Effect"/>
+  </rdf:Description>
+  
+  <rdf:Description rdf:about="#Steroid_Effect">
+    <generated_by rdf:resource="#Take_Stereoid"/>
+    <hasEnd>2</hasEnd>
+    <hasStart>0</hasStart>
+    <affects rdf:resource="http://mobilehealth.tw.rpi.edu/ontology/health.ttl#Glucose"/>
+    <symptom>High</symptom>
+    <rdf:type rdf:resource="#Effect"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#Take_Stereoid">
+    <generates rdf:resource="#Steroid_Effect"/>
+    <hasTag>steroid</hasTag>
+    <rdf:type rdf:resource="ical:Vevent"/>
+  </rdf:Description>
+  
+   <rdf:Description rdf:about="#Chemo_Effect">
+    <generated_by rdf:resource="#Chemo"/>
+    <hasEnd>10</hasEnd>
+    <hasStart>0</hasStart>
+    <affects rdf:resource="http://mobilehealth.tw.rpi.edu/ontology/health.ttl#RedBloodCell"/>
+    <symptom>Low</symptom>
+    <rdf:type rdf:resource="#Effect"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#Chemo">
+    <generates rdf:resource="#Chemo_Effect"/>
+    <hasTag>chemo</hasTag>
+    <rdf:type rdf:resource="ical:Vevent"/>
+  </rdf:Description>
+  
+</rdf:RDF>
+

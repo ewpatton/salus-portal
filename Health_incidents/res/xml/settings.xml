@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+ 
+     
+    <PreferenceCategory android:title="@string/pref_update_setting" >
+      
+        <ListPreference
+            android:key="calendar"
+            android:summary="@string/calendar_summary"
+            android:title="@string/calendar" />
+        
+         <ListPreference
+  android:title="Notify before the appointment"
+  android:summary="Select the notification time"
+  android:key="notif"
+  android:entries="@array/listDisplayWord"
+  android:entryValues="@array/listReturnValue" />
+         
+         <ListPreference
+  android:title="Frequency of the calendar refresh"
+  android:summary="Select the frequency of the refresh"
+  android:key="frequency"
+  android:entries="@array/refreshWord"
+  android:entryValues="@array/refreshValue" />
+
+    </PreferenceCategory>
+ 
+</PreferenceScreen>
