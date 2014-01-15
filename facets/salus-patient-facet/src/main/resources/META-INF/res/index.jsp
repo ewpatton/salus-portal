@@ -222,6 +222,14 @@
 			return null;
 		}// /findElement
 		
+		function addMark(warning, xCoord, yCoord){
+			var flag;
+			if (warning)
+				flag = "images/red-mark.png";
+			else flag = "images/yellow-mark.png";
+			chart.renderer.image(flag, xCoord, yCoord, 6, 21).add();
+		}// /addMark
+		
 		function graphPatientData(theData){
 			theSeries = parseToSeries(theData);
 			chart.addSeries(theSeries);
