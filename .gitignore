@@ -4,3 +4,6 @@ salus-android-app/gen
 .classpath
 .settings/
 target
+Health_incidents/bin
+Health_incidents/gen
+calendar-app-bassem/bin
