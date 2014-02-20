@@ -1,0 +1,203 @@
+ xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: { // don't display the dummy year
+                    month: '%e. %b'
+                },
+                plotBands: [{ // Light air
+                    from: Date.UTC(2013,07,12),
+                    to: Date.UTC(2013,07,14),
+                    color: 'rgba(0, 250, 0, 0.1)',
+
+                    label: {
+                        //text: 'Steroid',
+                        style: {
+                            color: '#756960'
+                        }
+                    }
+                },
+                { 
+                    from: Date.UTC(2013,07,13),
+                    to: Date.UTC(2013,07,15),
+                    color: 'rgba(0, 250, 0, 0.1)',
+
+                    label: {
+                        style: {
+                            color: '#756960'
+                        }
+                    }
+                },
+                { 
+                    from: Date.UTC(2013,07,19),
+                    to: Date.UTC(2013,07,21),
+                    color: 'rgba(0, 250, 0, 0.1)',
+
+                    label: {
+                        //text: 'Steroid',
+                        style: {
+                            color: '#756960'
+                        }
+                    }
+                },
+                { // Light air
+                    from: Date.UTC(2013,07,20),
+                    to: Date.UTC(2013,07,22),
+                    color: 'rgba(0, 250, 0, 0.1)',
+
+                    label: {
+                        style: {
+                            color: '#756960'
+                        }
+                    }
+                },
+                { // Light air
+                    from: Date.UTC(2013,07,26),
+                    to: Date.UTC(2013,07,28),
+                    color: 'rgba(0, 250, 0, 0.1)',
+
+                    label: {
+                        //text: 'Steroid',
+                        style: {
+                            color: '#756960'
+                        }
+                    }
+                },
+                { // Light air
+                    from: Date.UTC(2013,07,27),
+                    to: Date.UTC(2013,07,29),
+                    color: 'rgba(0, 250, 0, 0.1)',
+
+                    label: {
+                        style: {
+                            color: '#756960'
+                        }
+                    }
+                },
+                { // Light air
+                    from: Date.UTC(2013,08,02),
+                    to: Date.UTC(2013,08,04),
+                    color: 'rgba(0, 250, 0, 0.1)',
+
+                    label: {
+                        //text: 'Steroid',
+                        style: {
+                            color: '#756960'
+                        }
+                    }
+                },
+                { // Light air
+                    from: Date.UTC(2013,08,03),
+                    to: Date.UTC(2013,08,05),
+                    color: 'rgba(0, 250, 0, 0.1)',
+
+                    label: {
+                        style: {
+                            color: '#756960'
+                        }
+                    }
+                },
+                { // Light air
+                    from: Date.UTC(2013,08,09),
+                    to: Date.UTC(2013,08,11),
+                    color: 'rgba(0, 250, 0, 0.1)',
+
+                    label: {
+                        //text: 'Steroid',
+                        style: {
+                            color: '#756960'
+                        }
+                    }
+                },
+                { // Light air
+                    from: Date.UTC(2013,08,10),
+                    to: Date.UTC(2013,08,12),
+                    color: 'rgba(0, 250, 0, 0.1)',
+
+                    label: {
+                        style: {
+                            color: '#756960'
+                        }
+                    }
+                },
+                { // Light air
+                    from: Date.UTC(2013,08,16),
+                    to: Date.UTC(2013,08,18),
+                    color: 'rgba(0, 250, 0, 0.1)',
+
+                    label: {
+                        //text: 'Steroid',
+                        style: {
+                            color: '#756960'
+                        }
+                    }
+                },
+                { // Light air
+                    from: Date.UTC(2013,08,17),
+                    to: Date.UTC(2013,08,19),
+                    color: 'rgba(0, 250, 0, 0.1)',
+
+                    label: {
+                        style: {
+                            color: '#756960'
+                        }
+                    }
+                },
+                { // Light air
+                    from: Date.UTC(2013,08,23),
+                    to: Date.UTC(2013,08,25),
+                    color: 'rgba(0, 250, 0, 0.1)',
+
+                    label: {
+                        //text: 'Steroid',
+                        style: {
+                            color: '#756960'
+                        }
+                    }
+                },
+                { // Light air
+                    from: Date.UTC(2013,08,24),
+                    to: Date.UTC(2013,08,26),
+                    color: 'rgba(0, 250, 0, 0.1)',
+
+                    label: {
+                        style: {
+                            color: '#756960'
+                        }
+                    }
+                },]
+
+            },
+            yAxis: {
+                title: {
+                    text: 'Glucose'
+                },
+                 plotBands: [{ // Light air
+                    from: 60,
+                    to: 105,
+                    color: 'rgba(68, 170, 213, 0.1)',
+                    label: {
+                        text: 'Normal range',
+                        style: {
+                            color: '#606060'
+                        }
+                    }
+                },]
+            },
+            tooltip: {
+                formatter: function() {
+                        return '<b>'+ this.series.name +'</b><br/>'+
+                        Highcharts.dateFormat('%e. %b', this.x) +': '+ this.y +' m';
+                }
+            },
+            
+            
+            series: [{
+                name: 'Glucose levels',
+                                type: 'spline',
+
+                // Define the data points. All series have a dummy year
+                // of 1970/71 in order to be compared on the same x axis. Note
+                // that in JavaScript, months start at 0 for January, 1 for February etc.
+                data: [
+               
+            
+          
